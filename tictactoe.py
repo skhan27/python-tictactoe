@@ -4,7 +4,6 @@ import math
 
 
 def draw_board(spots):
-    print("print board")
     index = 0
     for i in range(1, 4):
         for j in range(1, 4):
@@ -19,7 +18,7 @@ def determine_first_player():
 
 
 def player_move(player_number, available_squares):
-    print("moving player ", player_number)
+    print("Player ", player_number, "'s turn", sep="")
     move = 0
     while True:
         if move not in available_squares:
@@ -31,22 +30,29 @@ def player_move(player_number, available_squares):
             return move
 
 
-if __name__ == "__main__":
-    board_layout = [1,2,3,4,5,6,7,8,9]
-    available_spots = [1,2,3,4,5,6,7,8,9]
-    draw_board(board_layout)
-    player = determine_first_player()
-    print("player", player, "is the first player")
-    game_over = False
-    while not game_over:
-        player_move(player, available_spots)
-        player += 1
-        available_spots.pop(1)
-        board_layout[1]="X"
-        draw_board(board_layout)
-        player_move(player, available_spots)
+def player_switch(player):
+    return 1 if player == 2 else 2
 
-    # os.system('cls' if os.name=='nt' else 'clear')   #to clear the screen
-        game_over = True
+
+def check_win_status():
+    return True
+
+if __name__ == "__main__":
+    board_layout = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    available_spots = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    current_player = determine_first_player()
+    print("player", current_player, "is the first player")
+    draw_board(board_layout)
+    game_over = False
+
+    while not game_over:
+        valid_move = player_move(current_player, available_spots)
+        available_spots.pop(available_spots.index(valid_move))
+        board_layout[valid_move-1] = "X" if current_player == 1 else "O"
+        current_player = player_switch(current_player)
+        # os.system('cls' if os.name=='nt' else 'clear')   #to clear the screen
+        draw_board(board_layout)
+        if check_win_status():
+            game_over = True
 
 
